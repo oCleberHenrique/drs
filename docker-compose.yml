@@ -1,0 +1,60 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: dsr_db
+    environment:
+      POSTGRES_DB: dsr_db
+      POSTGRES_USER: dsr_user
+      POSTGRES_PASSWORD: dsr_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - dsr_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dsr_backend
+    command: sh -c "uv run python manage.py migrate && uv run python manage.py collectstatic --noinput && uv run python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-dsr-dev-key
+      - ALLOWED_HOSTS=*
+      - DATABASE_URL=postgres://dsr_user:dsr_password@db:5432/dsr_db
+    depends_on:
+      - db
+    networks:
+      - dsr_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dsr_frontend
+    # WATCHPACK_POLLING é mandatório para Windows/WSL2/Docker Desktop file events
+    environment:
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - dsr_network
+
+volumes:
+  postgres_data:
+
+networks:
+  dsr_network:
+    driver: bridge
