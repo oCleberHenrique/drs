@@ -1,14 +1,23 @@
 from django.db import models
 from django.utils.text import slugify
+from ckeditor.fields import RichTextField  # <--- Importante para o editor de texto
+
+# ==============================================================================
+# 1. BLOCO: CONTEÚDO INTERNO (Páginas de Detalhe)
+# ==============================================================================
 
 class Atuacao(models.Model):
     titulo = models.CharField(max_length=100)
-    descricao_curta = models.TextField(help_text="Resumo para a Home")
-    conteudo = models.TextField(help_text="Conteúdo completo da página")
+    slug = models.SlugField(unique=True, blank=True)
     icone = models.CharField(max_length=50, default="star", help_text="Nome do ícone (Lucide/Heroicons)")
+    descricao_curta = models.TextField(help_text="Resumo para a Home")
+    
+    # Campos para a Página Interna
+    imagem_capa = models.ImageField(upload_to="atuacoes/", blank=True, null=True, help_text="Capa da página interna")
+    conteudo = RichTextField(help_text="Conteúdo completo da página", blank=True, null=True)
+    
     ordem = models.IntegerField(default=0)
     ativo = models.BooleanField(default=True)
-    slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -16,23 +25,28 @@ class Atuacao(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = "Atuação"
-        verbose_name_plural = "Atuações"
+        verbose_name = "Conteúdo - Atuação"
+        verbose_name_plural = "Conteúdo - Atuações"
         ordering = ["ordem", "titulo"]
 
     def __str__(self):
         return self.titulo
 
-class Equipe(models.Model):
+class MembroEquipe(models.Model):  # Renomeado de Equipe para MembroEquipe
     nome = models.CharField(max_length=100)
     cargo = models.CharField(max_length=100)
     foto = models.ImageField(upload_to="equipe/", blank=True, null=True)
+    
+    # Novos campos para o Modal
+    bio = models.TextField("Biografia / Currículo", blank=True, null=True)
     linkedin = models.URLField(blank=True)
+    email = models.EmailField("E-mail Profissional", blank=True, null=True)
+    
     ordem = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Membro da Equipe"
-        verbose_name_plural = "Equipe"
+        verbose_name = "Conteúdo - Membro da Equipe"
+        verbose_name_plural = "Conteúdo - Equipe"
         ordering = ["ordem", "nome"]
 
     def __str__(self):
@@ -43,10 +57,15 @@ class BlogPost(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     capa = models.ImageField(upload_to="blog/")
     resumo = models.TextField()
-    conteudo = models.TextField() # Futuramente podemos por um Editor Rich Text
+    
+    # Alterado para RichTextField
+    conteudo = RichTextField(verbose_name="Conteúdo Completo") 
+    
     publicado_em = models.DateTimeField(auto_now_add=True)
     destaque = models.BooleanField(default=False)
-    autor = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    
+    # Simplificado para CharField para facilitar edição manual se não usar sistema de usuários complexo
+    autor_nome = models.CharField("Nome do Autor", max_length=100, default="DSR Equipe")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -54,12 +73,16 @@ class BlogPost(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = "Artigo"
-        verbose_name_plural = "Blog"
+        verbose_name = "Conteúdo - Artigo Blog"
+        verbose_name_plural = "Conteúdo - Blog"
         ordering = ["-publicado_em"]
 
     def __str__(self):
         return self.titulo
+
+# ==============================================================================
+# 2. BLOCO: GESTÃO DA HOME PAGE (Banners e Seções)
+# ==============================================================================
 
 class HeroHome(models.Model):
     titulo = models.TextField(help_text="Use HTML básico se precisar, ex: <br> para quebrar linha.")
@@ -70,27 +93,26 @@ class HeroHome(models.Model):
     ativo = models.BooleanField(default=True)
     
     class Meta:
-        verbose_name = "Banner da Home"
-        verbose_name_plural = "Banners da Home"
+        verbose_name = "Home - 1. Banner Principal"
+        verbose_name_plural = "Home - 1. Banners Principal"
 
     def __str__(self):
         return self.titulo[:50]
-    
-class QuemSomos(models.Model):
+
+class QuemSomos(models.Model): # Quem Somos da HOME (Resumo)
     titulo = models.CharField(max_length=200, help_text="Ex: Um escritório humano...")
     texto = models.TextField(help_text="Texto completo da descrição.")
     imagem_fundo = models.ImageField(upload_to="quem_somos/", help_text="Imagem menor (Fundo). Ideal: 263x283px")
     imagem_frente = models.ImageField(upload_to="quem_somos/", help_text="Imagem maior (Frente). Ideal: 450x290px")
-    
     ativo = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Seção Quem Somos"
-        verbose_name_plural = "Seção Quem Somos"
+        verbose_name = "Home - Seção Quem Somos"
+        verbose_name_plural = "Home - Seção Quem Somos"
 
     def __str__(self):
         return self.titulo
-    
+
 class Diferencial(models.Model):
     titulo = models.CharField(max_length=100)
     descricao = models.TextField()
@@ -98,13 +120,13 @@ class Diferencial(models.Model):
     ativo = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Diferencial"
-        verbose_name_plural = "Diferenciais"
+        verbose_name = "Home - Diferencial"
+        verbose_name_plural = "Home - Diferenciais"
         ordering = ['ordem']
 
     def __str__(self):
         return self.titulo
-    
+
 class HomeAtuacao(models.Model):
     titulo = models.CharField(max_length=200, help_text="Ex: Atuação jurídica com foco...")
     descricao = models.TextField(help_text="Texto explicativo abaixo do título.")
@@ -114,12 +136,11 @@ class HomeAtuacao(models.Model):
     ativo = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Home - Seção Atuação"
-        verbose_name_plural = "Home - Seção Atuação"
+        verbose_name = "Home - Seção Atuação (Texto)"
+        verbose_name_plural = "Home - Seção Atuação (Texto)"
 
     def __str__(self):
         return self.titulo
-    
 
 class Historia(models.Model):
     subtitulo = models.CharField(max_length=100, help_text="Ex: A DSR por dentro")
@@ -131,7 +152,6 @@ class Historia(models.Model):
     # Imagens
     imagem_fundo = models.ImageField(upload_to="historia/", help_text="Imagem de fundo (Ex: Livros). Ideal: Vertical/Quadrada")
     imagem_frente = models.ImageField(upload_to="historia/", help_text="Imagem da frente (Ex: Reunião). Ideal: Horizontal")
-    
     ativo = models.BooleanField(default=True)
 
     class Meta:
@@ -140,42 +160,36 @@ class Historia(models.Model):
 
     def __str__(self):
         return self.titulo
-    
+
 class HomeEquipe(models.Model):
     subtitulo = models.CharField(max_length=100, help_text="Ex: A DSR por dentro")
     titulo = models.CharField(max_length=200, help_text="Ex: Quem cuida de você...")
     descricao = models.TextField(help_text="Texto alinhado à direita.")
-    
-    # Imagem da textura de fundo
     textura_fundo = models.ImageField(
         upload_to="home_equipe/", 
         blank=True, 
         null=True, 
         help_text="PNG transparente com linhas/formas geométricas. Será aplicada sobre a cor vinho."
     )
-    
     texto_botao = models.CharField(max_length=50, default="Conheça a equipe completa")
     link_botao = models.CharField(max_length=200, default="/quem-somos")
     ativo = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Home - Seção Equipe"
-        verbose_name_plural = "Home - Seção Equipe"
+        verbose_name = "Home - Seção Equipe (Texto)"
+        verbose_name_plural = "Home - Seção Equipe (Texto)"
 
     def __str__(self):
         return self.titulo
-    
+
 class HomeBlog(models.Model):
     subtitulo = models.CharField(max_length=100, help_text="Ex: Conteúdos e Artigos")
     titulo = models.CharField(max_length=200, help_text="Ex: Entenda seus direitos...")
     descricao = models.TextField(help_text="Texto explicativo.")
     texto_botao = models.CharField(max_length=50, default="Acessar blog")
     link_botao = models.CharField(max_length=200, default="/blog")
-    
-    # Imagens para composição
-    imagem_1 = models.ImageField(upload_to="home_blog/", help_text="Imagem superior esquerda (Ex: Mãos escrevendo)")
-    imagem_2 = models.ImageField(upload_to="home_blog/", help_text="Imagem inferior direita (Ex: Advogado em pé)")
-    
+    imagem_1 = models.ImageField(upload_to="home_blog/", help_text="Imagem superior esquerda")
+    imagem_2 = models.ImageField(upload_to="home_blog/", help_text="Imagem inferior direita")
     ativo = models.BooleanField(default=True)
 
     class Meta:
@@ -184,20 +198,14 @@ class HomeBlog(models.Model):
 
     def __str__(self):
         return self.titulo
-    
 
 class HomeContato(models.Model):
     subtitulo = models.CharField(max_length=100, help_text="Ex: Entre em contato")
     titulo = models.CharField(max_length=200, help_text="Ex: Precisa de orientação jurídica?")
     descricao = models.TextField(help_text="Texto explicativo sobre o atendimento.")
-    
-    # Botão do WhatsApp (Esquerda)
     texto_whatsapp = models.CharField(max_length=50, default="Falar com a DSR no WhatsApp")
     link_whatsapp = models.CharField(max_length=200, help_text="Link do wpp (https://wa.me/...)")
-    
-    # Texto do Botão do Formulário (Direita)
     texto_botao_form = models.CharField(max_length=50, default="Enviar Formulário")
-    
     ativo = models.BooleanField(default=True)
 
     class Meta:
@@ -207,6 +215,9 @@ class HomeContato(models.Model):
     def __str__(self):
         return self.titulo
 
+# ==============================================================================
+# 3. BLOCO: PÁGINAS ESTÁTICAS (Quem Somos Interna)
+# ==============================================================================
 
 class PaginaQuemSomos(models.Model):
     # Dobra 1: Banner e Conteúdo Principal
@@ -231,7 +242,6 @@ class PaginaQuemSomos(models.Model):
     def __str__(self):
         return "Configuração Quem Somos"
 
-# Modelo para a Galeria (Dobra 3)
 class GaleriaQuemSomos(models.Model):
     pagina = models.ForeignKey(PaginaQuemSomos, related_name="imagens_galeria", on_delete=models.CASCADE)
     imagem = models.ImageField(upload_to="galeria/")

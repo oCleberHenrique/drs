@@ -1,6 +1,6 @@
 import { getImageUrl } from "@/utils/imageUrl";
 import Link from "next/link";
-import { Icon } from "./Icon"; // Ou use um ícone direto do lucide se preferir
+import { Icon } from "./Icon"; 
 
 // Interface dos dados
 interface HistoryData {
@@ -16,7 +16,10 @@ interface HistoryData {
 async function getHistory(): Promise<HistoryData | null> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const res = await fetch("http://backend:8000/api/historia/", { cache: "no-store" });
+    
+    // CORREÇÃO: Usando a variável apiUrl
+    const res = await fetch(`${apiUrl}/api/historia/`, { cache: "no-store" });
+    
     if (!res.ok) return null;
     const data = await res.json();
     const lista = data.results || data || [];
@@ -35,12 +38,10 @@ export default async function HistorySection() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
           {/* LADO ESQUERDO: Texto e Botão */}
-          <div className="space-y-8 order-2 lg:order-1"> {/* order-2 no mobile, order-1 no desktop */}
+          <div className="space-y-8 order-2 lg:order-1">
             
             {/* Subtítulo com Ícone */}
             <div className="flex items-center gap-3">
-               {/* Se tiver o ícone do escudo em SVG, use <img src="/icone-escudo.svg" ... /> */}
-               {/* Aqui usando um placeholder do Lucide */}
                <div className="text-[#3D0C11]">
                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                </div>

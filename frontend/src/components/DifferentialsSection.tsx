@@ -3,7 +3,10 @@ import { Diferencial } from "@/types";
 async function getDiferenciais(): Promise<Diferencial[]> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const res = await fetch("http://backend:8000/api/diferenciais/", { cache: "no-store" });
+    
+    // CORREÇÃO: Usando a template string com a variável apiUrl
+    const res = await fetch(`${apiUrl}/api/diferenciais/`, { cache: "no-store" });
+    
     if (!res.ok) return [];
     const data = await res.json();
     return data.results || data || [];

@@ -14,7 +14,10 @@ interface SectionData {
 // Busca Texto da Esquerda
 async function getSectionData(): Promise<SectionData | null> {
   try {
-    const res = await fetch("http://backend:8000/api/home-atuacao/", { cache: "no-store" });
+    // CORREÇÃO 1: Definindo e usando a variável de ambiente
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const res = await fetch(`${apiUrl}/api/home-atuacao/`, { cache: "no-store" });
+    
     if (!res.ok) return null;
     const data = await res.json();
     const lista = data.results || data || [];
@@ -26,7 +29,10 @@ async function getSectionData(): Promise<SectionData | null> {
 async function getAtuacoes(): Promise<Atuacao[]> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const res = await fetch("http://backend:8000/api/atuacoes/", { cache: "no-store" });
+    
+    // CORREÇÃO 2: Usando a variável apiUrl que você criou (estava fixo backend:8000 antes)
+    const res = await fetch(`${apiUrl}/api/atuacoes/`, { cache: "no-store" });
+    
     if (!res.ok) return [];
     const data = await res.json();
     const lista = data.results || data || [];
@@ -73,7 +79,6 @@ export default async function PracticeSection() {
                   
                   {/* Ícone Circular (Vinho com ícone Dourado) */}
                   <div className="w-16 h-16 bg-[#3D0C11] rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    {/* Usei uma cor dourada clara para o ícone (#F2ECE4) para contrastar com o vinho */}
                     <div className="text-[#F2ECE4]">
                         <Icon name={item.icone} className="w-8 h-8" />
                     </div>

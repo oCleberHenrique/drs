@@ -1,41 +1,53 @@
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
-from .models import Atuacao, Diferencial, Equipe, BlogPost, HeroHome, Historia, HomeAtuacao, HomeBlog, HomeContato, HomeEquipe, PaginaQuemSomos, QuemSomos
+from .models import (
+    HeroHome, HomeAtuacao, HomeEquipe, 
+    Atuacao, MembroEquipe, BlogPost,
+    PaginaQuemSomos, QuemSomos,
+    HomeBlog, HomeContato, Historia, Diferencial
+)
 from .serializers import (
-    AtuacaoSerializer, 
-    AtuacaoDetalheSerializer,
-    DiferencialSerializer, 
-    EquipeSerializer, 
-    BlogPostSerializer, HeroHomeSerializer,
-    HistoriaSerializer,
-    HomeAtuacaoSerializer,
-    HomeBlogSerializer,
-    HomeContatoSerializer,
-    HomeEquipeSerializer,
-    PaginaQuemSomosSerializer, QuemSomosSerializer
+    HeroHomeSerializer, HomeAtuacaoSerializer, HomeEquipeSerializer,
+    AtuacaoSerializer, MembroEquipeSerializer, BlogPostSerializer,
+    PaginaQuemSomosSerializer, HomeBlogSerializer, HomeContatoSerializer,
+    HistoriaSerializer, DiferencialSerializer, QuemSomosSerializer
 )
 
+# ==============================================================================
+# 1. VIEWS DE CONTEÚDO (Listagem e Internas)
+# ==============================================================================
+
 class AtuacaoViewSet(viewsets.ReadOnlyModelViewSet):
+    # Filtra apenas as ativas e ordena
     queryset = Atuacao.objects.filter(ativo=True).order_by('ordem')
+    serializer_class = AtuacaoSerializer
     permission_classes = [AllowAny]
-    lookup_field = 'slug'
+    lookup_field = 'slug' # Permite acessar via /api/atuacoes/direito-civil/
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return AtuacaoDetalheSerializer
-        return AtuacaoSerializer
-
-class EquipeViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Equipe.objects.all().order_by('ordem')
-    serializer_class = EquipeSerializer
+class MembroEquipeViewSet(viewsets.ReadOnlyModelViewSet):
+    # Alterado de Equipe para MembroEquipe
+    queryset = MembroEquipe.objects.all().order_by('ordem')
+    serializer_class = MembroEquipeSerializer
     permission_classes = [AllowAny]
 
-class BlogViewSet(viewsets.ReadOnlyModelViewSet):
+class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BlogPost.objects.all().order_by('-publicado_em')
     serializer_class = BlogPostSerializer
     permission_classes = [AllowAny]
     lookup_field = 'slug'
 
+    # Adicionamos um filtro extra para pegar apenas os destaques na Home se quiser
+    # Ex: /api/blog/?destaque=true
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        destaque = self.request.query_params.get('destaque')
+        if destaque == 'true':
+            queryset = queryset.filter(destaque=True)
+        return queryset
+
+# ==============================================================================
+# 2. VIEWS DA HOME PAGE
+# ==============================================================================
 
 class HeroHomeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = HeroHome.objects.filter(ativo=True).order_by('-id') 
@@ -77,8 +89,11 @@ class HomeContatoViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = HomeContatoSerializer
     permission_classes = [AllowAny]
 
+# ==============================================================================
+# 3. PÁGINAS ESTÁTICAS
+# ==============================================================================
+
 class PaginaQuemSomosViewSet(viewsets.ReadOnlyModelViewSet):
-    # Pega o primeiro registro encontrado
     queryset = PaginaQuemSomos.objects.all()
     serializer_class = PaginaQuemSomosSerializer
     permission_classes = [AllowAny]

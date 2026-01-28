@@ -1,7 +1,7 @@
 import { MembroEquipe } from "@/types";
 import { getImageUrl } from "@/utils/imageUrl";
 import Link from "next/link";
-import { Icon } from "./Icon"; // Opcional se quiser ícone no subtítulo
+import { Icon } from "./Icon"; 
 
 // Interface para os textos da seção
 interface HomeEquipeData {
@@ -17,7 +17,10 @@ interface HomeEquipeData {
 async function getSectionData(): Promise<HomeEquipeData | null> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const res = await fetch("http://backend:8000/api/home-equipe/", { cache: "no-store" });
+    
+    // CORREÇÃO: Usando apiUrl
+    const res = await fetch(`${apiUrl}/api/home-equipe/`, { cache: "no-store" });
+    
     if (!res.ok) return null;
     const data = await res.json();
     const lista = data.results || data || [];
@@ -28,7 +31,11 @@ async function getSectionData(): Promise<HomeEquipeData | null> {
 // Busca os 3 primeiros membros da equipe
 async function getTeamMembers(): Promise<MembroEquipe[]> {
   try {
-    const res = await fetch("http://backend:8000/api/equipe/", { cache: "no-store" });
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    
+    // CORREÇÃO: Usando apiUrl
+    const res = await fetch(`${apiUrl}/api/equipe/`, { cache: "no-store" });
+    
     if (!res.ok) return [];
     const data = await res.json();
     const lista = data.results || data || [];
@@ -63,7 +70,7 @@ export default async function TeamHomeSection() {
           {/* Lado Esquerdo */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-                {/* Ícone de Escudo (SVG) - opcional */}
+                {/* Ícone de Escudo (SVG) */}
                 <div className="text-[#D8B48D]">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
@@ -102,7 +109,7 @@ export default async function TeamHomeSection() {
                     {membro.nome}
                 </h3>
                 <p className="font-jakarta text-[#3D0C11] text-sm mt-1 opacity-90 font-medium">
-                    {membro.cargo} {/* Aqui aparecerá a Área (ex: Direito Civil) */}
+                    {membro.cargo} 
                 </p>
               </div>
 

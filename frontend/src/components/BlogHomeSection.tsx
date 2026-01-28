@@ -13,8 +13,12 @@ interface HomeBlogData {
 
 async function getData(): Promise<HomeBlogData | null> {
   try {
+    // 1. Pega a URL certa
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const res = await fetch("http://backend:8000/api/home-blog/", { cache: "no-store" });
+    
+    // 2. CORREÇÃO: Usa a variável apiUrl no fetch
+    const res = await fetch(`${apiUrl}/api/home-blog/`, { cache: "no-store" });
+    
     if (!res.ok) return null;
     const data = await res.json();
     const lista = data.results || data || [];

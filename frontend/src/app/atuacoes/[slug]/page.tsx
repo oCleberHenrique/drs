@@ -1,97 +1,81 @@
-import { Icon } from "@/components/Icon";
-import Navbar from "@/components/Navbar";
-import { Atuacao } from "@/types";
+import { getImageUrl } from "@/utils/imageUrl";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-// Função para buscar os dados de UMA atuação específica
-async function getAtuacaoDetalhe(slug: string): Promise<Atuacao | null> {
+// Buscar dados pelo SLUG
+async function getAtuacaoDetalhe(slug: string) {
   try {
-    // Busca direto pelo SLUG na API do Django
-    const res = await fetch(`http://backend:8000/api/atuacoes/${slug}/`, {
-      cache: "no-store", // Garante dados sempre frescos
-    });
-
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    // O Django geralmente filtra por ?slug=... ou direto na rota
+    const res = await fetch(`${apiUrl}/api/atuacoes/?slug=${slug}`, { cache: "no-store" });
     if (!res.ok) return null;
-
-    return res.json();
-  } catch (error) {
-    console.error("Erro ao buscar detalhe:", error);
-    return null;
-  }
+    const data = await res.json();
+    // A API retorna uma lista, pegamos o primeiro
+    return (data.results && data.results.length > 0) ? data.results[0] : null;
+  } catch (error) { return null; }
 }
 
-// Params no Next.js 15 agora são Promises, precisamos aguardar
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
+export default async function AtuacaoInterna({ params }: { params: { slug: string } }) {
+  const atuacao = await getAtuacaoDetalhe(params.slug);
 
-export default async function AtuacaoDetalhePage({ params }: PageProps) {
-  // 1. Desembrulhar os parametros (Next 15)
-  const { slug } = await params;
-  
-  // 2. Buscar dados no Backend
-  const dados = await getAtuacaoDetalhe(slug);
-
-  // 3. Se não achar (ex: slug errado), manda para página 404 oficial
-  if (!dados) {
-    notFound();
-  }
+  if (!atuacao) return notFound();
 
   return (
-    <div className="min-h-screen flex flex-col font-jakarta bg-white">
-      <Navbar />
+    <div className="bg-white font-jakarta pb-20">
+      {/* Banner Topo (Max 300px) */}
+      <div className="w-full h-[300px] bg-[#3D0C11] relative flex items-center justify-center">
+         {atuacao.imagem_capa && (
+            <div 
+                className="absolute inset-0 bg-cover bg-center opacity-20"
+                style={{ backgroundImage: `url('${getImageUrl(atuacao.imagem_capa)}')` }}
+            ></div>
+         )}
+         <div className="relative z-10 text-center px-4">
+             <h1 className="font-billgest text-4xl md:text-6xl text-white">{atuacao.titulo}</h1>
+         </div>
+      </div>
 
-      <main className="flex-1">
-        {/* Cabeçalho da Página Interna */}
-        <section className="bg-gray-50 py-16 border-b border-gray-100">
-          <div className="container mx-auto px-4">
-            <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-gray-500 hover:text-purple-700 mb-6 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="m15 18-6-6 6-6"/></svg>
-              Voltar para Home
-            </Link>
-            
-            <div className="flex items-center gap-6">
-              <div className="w-16 h-16 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center shrink-0">
-                 <Icon name={dados.icone} className="w-8 h-8" />
-              </div>
-              <h1 className="font-billgest text-4xl md:text-5xl text-purple-950">
-                {dados.titulo}
-              </h1>
+      <div className="container mx-auto px-4 mt-16">
+         <div className="grid lg:grid-cols-12 gap-12">
+            {/* Conteúdo (Esquerda) */}
+            <div className="lg:col-span-8">
+               <h2 className="font-billgest text-3xl text-[#3D0C11] mb-6">Sobre a área</h2>
+               {/* Renderiza o conteúdo (pode ser HTML rico do Django) */}
+               <div 
+                 className="prose prose-lg text-gray-600 max-w-none whitespace-pre-line text-justify"
+                 dangerouslySetInnerHTML={{ __html: atuacao.conteudo || atuacao.descricao_curta }}
+               />
+               
+               {/* CTA ao final */}
+               <div className="mt-12 p-8 bg-gray-50 rounded-lg border-l-4 border-[#3D0C11]">
+                  <h3 className="font-bold text-xl mb-2 text-[#3D0C11]">Precisa de apoio nesta área?</h3>
+                  <p className="text-gray-600 mb-6">Nossa equipe de especialistas está pronta para analisar o seu caso.</p>
+                  <Link href="/contato">
+                     <button className="px-8 py-3 bg-[#3D0C11] text-white font-bold rounded hover:bg-[#D8B48D] transition-colors">
+                        Falar com Especialista
+                     </button>
+                  </Link>
+               </div>
             </div>
-          </div>
-        </section>
 
-        {/* Conteúdo do Artigo */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto">
-              
-              {/* Renderização do Texto */}
-              {/* Nota: Futuramente podemos usar um parser de Markdown/HTML aqui */}
-              <div className="prose prose-lg prose-purple text-gray-600 leading-relaxed whitespace-pre-line">
-                {dados.conteudo || dados.descricao_curta}
-              </div>
-
-              {/* Botão de CTA no final do texto */}
-              <div className="mt-16 p-8 bg-purple-900 rounded-2xl text-white text-center">
-                <h3 className="font-billgest text-2xl mb-4">Precisa dessa solução na sua empresa?</h3>
-                <p className="mb-8 opacity-90">Nossa equipe de especialistas está pronta para desenhar o projeto ideal para você.</p>
-                <Link 
-                  href="/contato"
-                  className="inline-block bg-white text-purple-900 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors"
-                >
-                  Falar com Consultor
-                </Link>
-              </div>
-
+            {/* Lateral (Imagem ou Menu) */}
+            <div className="lg:col-span-4 space-y-8">
+               {atuacao.imagem_capa && (
+                  <img 
+                    src={getImageUrl(atuacao.imagem_capa)} 
+                    alt={atuacao.titulo} 
+                    className="w-full h-auto rounded-lg shadow-xl"
+                  />
+               )}
+               <div className="bg-[#3D0C11] p-6 rounded text-white">
+                  <h4 className="font-billgest text-xl mb-4 text-[#D8B48D]">Outras Áreas</h4>
+                  <ul className="space-y-3">
+                     <li><Link href="/atuacoes" className="hover:text-[#D8B48D]">Ver todas as atuações &rarr;</Link></li>
+                  </ul>
+               </div>
             </div>
-          </div>
-        </section>
-      </main>
+         </div>
+      </div>
     </div>
   );
 }

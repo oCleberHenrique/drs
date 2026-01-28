@@ -7,9 +7,9 @@ export interface Atuacao {
   titulo: string;
   slug: string;
   descricao_curta: string;
-  conteudo?: string; // Opcional pois na listagem pode não vir
+  conteudo?: string;
   icone: string;
-  imagem_capa?: string; // Adicionei caso precise no futuro
+  imagem_capa?: string;
 }
 
 export interface BlogPost {
@@ -33,8 +33,24 @@ export interface HeroData {
   imagem_fundo: string;
 }
 
+export interface HomeAtuacaoData {
+  titulo: string;
+  descricao: string;
+  texto_cta: string;
+  texto_botao: string;
+  link_botao: string;
+}
+
+export interface HomeEquipeData {
+  subtitulo: string;
+  titulo: string;
+  descricao: string;
+  textura_fundo: string;
+  texto_botao: string;
+  link_botao: string;
+}
+
 export interface QuemSomosHomeData {
-  // Renomeei para evitar conflito com a página interna
   id: number;
   titulo: string;
   texto: string;
@@ -68,4 +84,16 @@ export interface PaginaQuemSomosData {
   valores: string;
   iframe_mapa: string;
   imagens_galeria: GaleriaItem[];
+}
+
+// --- Novo Tipo: Membro da Equipe (Correção do erro vermelho) ---
+
+export interface MembroEquipe {
+  id: number;
+  nome: string;
+  cargo: string;
+  foto: string;
+  bio?: string;   
+  linkedin?: string; 
+  email?: string;   
 }

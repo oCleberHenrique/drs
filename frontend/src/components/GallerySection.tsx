@@ -3,12 +3,7 @@
 import { useState } from "react";
 import { getImageUrl } from "@/utils/imageUrl";
 import { X } from "lucide-react";
-
-interface GaleriaItem {
-  id: number;
-  imagem: string;
-  legenda: string;
-}
+import { GaleriaItem } from "@/types"; // <--- Importando do arquivo global
 
 export default function GallerySection({ imagens }: { imagens: GaleriaItem[] }) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);

@@ -18,9 +18,15 @@ interface PaginaQuemSomosData {
 
 async function getData(): Promise<PaginaQuemSomosData | null> {
   try {
-    const res = await fetch("http://backend:8000/api/pagina-quem-somos/", { cache: "no-store" });
+    // CORREÇÃO: Usando a variável de ambiente correta
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    
+    // Agora busca na URL dinâmica
+    const res = await fetch(`${apiUrl}/api/pagina-quem-somos/`, { cache: "no-store" });
+    
     if (!res.ok) return null;
     const data = await res.json();
+    
     // Pega o primeiro item ou o objeto direto
     return Array.isArray(data) || Array.isArray(data.results) ? (data.results ? data.results[0] : data[0]) : data;
   } catch (error) { return null; }
@@ -107,7 +113,7 @@ export default async function QuemSomosPage() {
         </div>
       </section>
 
-      {/* DOBRA 3: Galeria de Imagens (Componente Cliente) */}
+      {/* DOBRA 3: Galeria de Imagens */}
       <GallerySection imagens={data.imagens_galeria} />
 
       {/* DOBRA 4: Mapa */}

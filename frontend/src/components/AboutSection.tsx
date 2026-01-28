@@ -1,10 +1,14 @@
-import { QuemSomosData } from "@/types";
-import { getImageUrl } from "@/utils/imageUrl"; // <--- Importe a função
+import { QuemSomosHomeData } from "@/types"; // <--- Mudamos o nome aqui
+import { getImageUrl } from "@/utils/imageUrl";
 
-async function getAboutData(): Promise<QuemSomosData | null> {
+async function getAboutData(): Promise<QuemSomosHomeData | null> {
   try {
+    // Pega a URL correta (Vercel ou Local)
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const res = await fetch("http://backend:8000/api/quem-somos/", { cache: "no-store" });
+    
+    // CORREÇÃO CRÍTICA AQUI: Usamos a variável apiUrl, não o endereço fixo backend:8000
+    const res = await fetch(`${apiUrl}/api/quem-somos/`, { cache: "no-store" });
+    
     if (!res.ok) return null;
     const data = await res.json();
     const lista = data.results || data || [];
@@ -28,19 +32,19 @@ export default async function AboutSection() {
           {/* LADO ESQUERDO: Imagens */}
           <div className="relative h-[350px] md:h-[400px] w-full max-w-lg mx-auto lg:mx-0 flex flex-col justify-center">
             
-            {/* IMAGEM 1 (Fundo) - Usando o Tradutor */}
+            {/* IMAGEM 1 (Fundo) */}
             <div className="absolute top-0 left-0 z-0">
                 <img 
-                    src={getImageUrl(data.imagem_fundo)} // <--- USO AQUI
+                    src={getImageUrl(data.imagem_fundo)}
                     alt="Detalhe escritório" 
                     className="w-[263px] h-[283px] object-cover rounded-sm shadow-sm opacity-90"
                 />
             </div>
 
-            {/* IMAGEM 2 (Frente) - Usando o Tradutor */}
+            {/* IMAGEM 2 (Frente) */}
             <div className="absolute top-[60px] left-[40px] md:left-[80px] z-10">
                 <img 
-                    src={getImageUrl(data.imagem_frente)} // <--- USO AQUI
+                    src={getImageUrl(data.imagem_frente)}
                     alt="Escritório DSR" 
                     className="w-[300px] md:w-[450px] h-[200px] md:h-[290px] object-cover rounded-sm shadow-2xl border-4 border-white"
                 />
