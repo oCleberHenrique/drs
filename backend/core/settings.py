@@ -13,8 +13,13 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-dsr")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = ['dsrpainel.v4jasson.com.br', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "31.97.242.139",
+    "dsr.v4jasson.com.br",
+    "*"
+]
 # Application definition
 INSTALLED_APPS = [
     # Unfold Admin (Deve vir antes do django.contrib.admin)
