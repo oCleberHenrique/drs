@@ -1,5 +1,5 @@
 import { HeroData } from "@/types";
-import { getImageUrl } from "@/utils/imageUrl"; // <--- Importe
+import { getImageUrl } from '@/utils/imageUrl'; // <--- Importe
 import Link from "next/link";
 
 async function getHeroData(): Promise<HeroData | null> {
