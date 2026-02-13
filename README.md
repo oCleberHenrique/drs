@@ -41,6 +41,19 @@ DSR/
    ```
 
 3. **Execute o Docker Compose:**
+
+   **Windows:**
+   ```bash
+   start.bat
+   ```
+   
+   **Linux/Mac:**
+   ```bash
+   chmod +x start.sh
+   ./start.sh
+   ```
+   
+   **Ou manualmente:**
    ```bash
    docker-compose up --build
    ```
@@ -224,6 +237,34 @@ python manage.py collectstatic
 ## 📄 Licença
 
 Este projeto é proprietário.
+
+## ✅ Validação e Checklist
+
+Consulte o arquivo `VALIDACAO.md` para:
+- Checklist completo de validação
+- Verificação de alinhamento frontend/backend
+- Lista de todos os endpoints e campos
+- Checklist de testes antes de produção
+
+## 📝 Primeiros Passos Após Iniciar
+
+1. **Criar superusuário do admin:**
+   ```bash
+   docker-compose exec backend uv run python manage.py createsuperuser
+   ```
+
+2. **Acessar o painel admin:**
+   - URL: http://localhost:8080/admin/
+   - Use as credenciais criadas no passo anterior
+
+3. **Preencher conteúdo:**
+   - Configure as seções da Home Page
+   - Adicione Atuações, Blog Posts e Membros da Equipe
+   - Configure a página "Quem Somos"
+
+4. **Testar o frontend:**
+   - Acesse: http://localhost:3000
+   - Verifique se todas as seções estão aparecendo corretamente
 
 ## 👥 Suporte
 

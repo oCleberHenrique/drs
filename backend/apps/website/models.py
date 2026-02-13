@@ -240,7 +240,7 @@ class PaginaQuemSomos(models.Model):
         verbose_name_plural = "Página Interna - Quem Somos"
 
     def __str__(self):
-        return "Configuração Quem Somos"
+        return self.titulo_principal or "Configuração Quem Somos"
 
 class GaleriaQuemSomos(models.Model):
     pagina = models.ForeignKey(PaginaQuemSomos, related_name="imagens_galeria", on_delete=models.CASCADE)
