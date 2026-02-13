@@ -22,7 +22,7 @@ services:
     volumes:
       - ./backend:/app
     ports:
-      - "8000:8000"
+      - "8080:8000"
     environment:
       - DEBUG=1
       - SECRET_KEY=django-insecure-dsr-dev-key
@@ -32,7 +32,7 @@ services:
       - db
     networks:
       - dsr_network
-
+ 
   frontend:
     build:
       context: ./frontend
