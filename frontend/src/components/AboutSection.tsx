@@ -7,7 +7,7 @@ async function getAboutData(): Promise<QuemSomosHomeData | null> {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     
     // CORREÇÃO CRÍTICA AQUI: Usamos a variável apiUrl, não o endereço fixo backend:8000
-    const res = await fetch(`${apiUrl}/api/quem-somos/`, { cache: "no-store" });
+    const res = await fetch(`${apiUrl}/api/quem-somos-home/`, { cache: "no-store" });
     
     if (!res.ok) return null;
     const data = await res.json();

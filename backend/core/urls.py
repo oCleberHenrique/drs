@@ -10,7 +10,8 @@ from apps.website.views import (
     HeroHomeViewSet, HomeAtuacaoViewSet, HomeEquipeViewSet,
     AtuacaoViewSet, MembroEquipeViewSet, BlogPostViewSet,
     PaginaQuemSomosViewSet, HomeBlogViewSet, HomeContatoViewSet,
-    HistoriaViewSet, DiferencialViewSet, QuemSomosViewSet
+    HistoriaViewSet, DiferencialViewSet, QuemSomosViewSet,
+    ContatoViewSet
 )
 
 # Configuração do Roteador da API
@@ -18,7 +19,7 @@ router = DefaultRouter()
 
 # --- 1. HOME PAGE (Seções) ---
 router.register(r'hero', HeroHomeViewSet)
-router.register(r'quem-somos-home', QuemSomosViewSet) # Renomeado rota para diferenciar da página interna
+router.register(r'quem-somos-home', QuemSomosViewSet)
 router.register(r'diferenciais', DiferencialViewSet)
 router.register(r'home-atuacao', HomeAtuacaoViewSet)
 router.register(r'historia', HistoriaViewSet)
@@ -33,6 +34,9 @@ router.register(r'blog', BlogPostViewSet)       # <--- Atualizado
 
 # --- 3. PÁGINAS ÚNICAS ---
 router.register(r'pagina-quem-somos', PaginaQuemSomosViewSet)
+
+# --- 4. FORMULÁRIO DE CONTATO ---
+router.register(r'contato', ContatoViewSet, basename='contato')
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -5,10 +5,11 @@ import { Calendar, User } from "lucide-react";
 async function getPostDetalhe(slug: string) {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    const res = await fetch(`${apiUrl}/api/blog/?slug=${slug}`, { cache: "no-store" });
+    // Usa o lookup_field 'slug' diretamente na URL
+    const res = await fetch(`${apiUrl}/api/blog/${slug}/`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
-    return (data.results && data.results.length > 0) ? data.results[0] : null;
+    return data;
   } catch (error) { return null; }
 }
 

@@ -249,3 +249,24 @@ class GaleriaQuemSomos(models.Model):
 
     def __str__(self):
         return self.legenda or "Imagem Galeria"
+
+# ==============================================================================
+# 4. BLOCO: FORMULÁRIO DE CONTATO
+# ==============================================================================
+
+class Contato(models.Model):
+    nome = models.CharField(max_length=200)
+    email = models.EmailField()
+    telefone = models.CharField(max_length=20, blank=True, null=True)
+    mensagem = models.TextField()
+    lido = models.BooleanField(default=False)
+    respondido = models.BooleanField(default=False)
+    criado_em = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Mensagem de Contato"
+        verbose_name_plural = "Mensagens de Contato"
+        ordering = ["-criado_em"]
+    
+    def __str__(self):
+        return f"{self.nome} - {self.email}"

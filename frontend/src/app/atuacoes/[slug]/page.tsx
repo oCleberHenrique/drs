@@ -6,12 +6,11 @@ import { notFound } from "next/navigation";
 async function getAtuacaoDetalhe(slug: string) {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    // O Django geralmente filtra por ?slug=... ou direto na rota
-    const res = await fetch(`${apiUrl}/api/atuacoes/?slug=${slug}`, { cache: "no-store" });
+    // Usa o lookup_field 'slug' diretamente na URL
+    const res = await fetch(`${apiUrl}/api/atuacoes/${slug}/`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
-    // A API retorna uma lista, pegamos o primeiro
-    return (data.results && data.results.length > 0) ? data.results[0] : null;
+    return data;
   } catch (error) { return null; }
 }
 

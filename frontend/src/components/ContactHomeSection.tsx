@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ContactForm from "./ContactForm";
 
 interface HomeContatoData {
   subtitulo: string;
@@ -66,46 +67,7 @@ export default async function ContactHomeSection() {
 
           {/* LADO DIREITO: Formulário */}
           <div className="bg-white p-0 md:p-4 rounded-xl">
-             <form className="space-y-6">
-                
-                {/* Campo Nome */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-[#3D0C11] font-bold text-sm">Nome:</label>
-                    <input 
-                        type="text" 
-                        placeholder="Digite seu nome completo" 
-                        className="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-[#3D0C11] transition-colors bg-white"
-                    />
-                </div>
-
-                {/* Campo E-mail */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-[#3D0C11] font-bold text-sm">E-mail:</label>
-                    <input 
-                        type="email" 
-                        placeholder="Digite seu e-mail" 
-                        className="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-[#3D0C11] transition-colors bg-white"
-                    />
-                </div>
-
-                {/* Campo Telefone */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-[#3D0C11] font-bold text-sm">Telefone:</label>
-                    <input 
-                        type="tel" 
-                        placeholder="(21) 9.9999-9999" 
-                        className="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-[#3D0C11] transition-colors bg-white"
-                    />
-                </div>
-
-                {/* Botão Enviar (Alinhado à direita) */}
-                <div className="flex justify-end pt-4">
-                    <button type="submit" className="px-8 py-3 bg-[#3D0C11] text-white rounded-sm font-medium hover:bg-opacity-90 transition-all shadow-md">
-                        {data.texto_botao_form}
-                    </button>
-                </div>
-
-             </form>
+             <ContactForm textoBotao={data.texto_botao_form} />
           </div>
 
         </div>

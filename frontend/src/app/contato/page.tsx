@@ -1,3 +1,5 @@
+import ContactForm from "@/components/ContactForm";
+
 export default function ContatoPage() {
   return (
     <div className="bg-white font-jakarta">
@@ -35,27 +37,7 @@ export default function ContatoPage() {
 
             {/* Formulário */}
             <div className="bg-gray-50 p-8 md:p-12 rounded-lg shadow-lg">
-               <form className="space-y-6">
-                  <div>
-                     <label className="block text-sm font-bold text-[#3D0C11] mb-2">Nome Completo</label>
-                     <input type="text" className="w-full p-3 border border-gray-300 rounded focus:border-[#3D0C11] outline-none" placeholder="Seu nome" />
-                  </div>
-                  <div>
-                     <label className="block text-sm font-bold text-[#3D0C11] mb-2">E-mail</label>
-                     <input type="email" className="w-full p-3 border border-gray-300 rounded focus:border-[#3D0C11] outline-none" placeholder="seu@email.com" />
-                  </div>
-                  <div>
-                     <label className="block text-sm font-bold text-[#3D0C11] mb-2">Telefone</label>
-                     <input type="tel" className="w-full p-3 border border-gray-300 rounded focus:border-[#3D0C11] outline-none" placeholder="(00) 00000-0000" />
-                  </div>
-                  <div>
-                     <label className="block text-sm font-bold text-[#3D0C11] mb-2">Mensagem</label>
-                     <textarea className="w-full p-3 border border-gray-300 rounded focus:border-[#3D0C11] outline-none h-32" placeholder="Como podemos ajudar?"></textarea>
-                  </div>
-                  <button type="submit" className="w-full py-4 bg-[#3D0C11] text-white font-bold rounded hover:bg-[#D8B48D] transition-colors shadow-lg">
-                     Enviar Mensagem
-                  </button>
-               </form>
+               <ContactForm textoBotao="Enviar Mensagem" />
             </div>
 
          </div>

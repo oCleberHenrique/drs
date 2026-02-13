@@ -4,7 +4,7 @@ from .models import (
     Atuacao, MembroEquipe, BlogPost,
     PaginaQuemSomos, GaleriaQuemSomos,
     HomeBlog, HomeContato, Historia, Diferencial,
-    QuemSomos # <--- Importante: Importar o model da Home
+    QuemSomos, Contato # <--- Importante: Importar o model da Home e Contato
 )
 
 # ==============================================================================
@@ -87,3 +87,12 @@ class PaginaQuemSomosSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaginaQuemSomos
         fields = '__all__'
+
+# ==============================================================================
+# 4. SERIALIZER DE CONTATO
+# ==============================================================================
+
+class ContatoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contato
+        fields = ['nome', 'email', 'telefone', 'mensagem']

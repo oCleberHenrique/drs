@@ -13,13 +13,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-dsr")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "31.97.242.139",
-    "dsr.v4jasson.com.br",
-    "*"
-]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+if "*" in ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["*"]  # Apenas em desenvolvimento
 # Application definition
 INSTALLED_APPS = [
     # Unfold Admin (Deve vir antes do django.contrib.admin)
@@ -41,6 +37,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "django_filters",
+    "ckeditor",
     
     # Local Apps
     "apps.website",
@@ -124,14 +121,42 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "https://dsr.v4jasson.com.br",
-    "http://localhost:3000",
-]
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,https://dsr.v4jasson.com.br"
+).split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://dsrpainel.v4jasson.com.br",
-]
+# CSRF Configuration
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    "CSRF_TRUSTED_ORIGINS",
+    "https://dsrpainel.v4jasson.com.br,https://dsr.v4jasson.com.br"
+).split(",")
+
+# Security Settings (Production)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"
+
+# CKEditor Configuration
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ],
+    },
+}
 
 # Unfold Config (Painel Admin)
 UNFOLD = {

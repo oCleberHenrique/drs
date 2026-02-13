@@ -1,16 +1,19 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import (
     HeroHome, HomeAtuacao, HomeEquipe, 
     Atuacao, MembroEquipe, BlogPost,
     PaginaQuemSomos, QuemSomos,
-    HomeBlog, HomeContato, Historia, Diferencial
+    HomeBlog, HomeContato, Historia, Diferencial, Contato
 )
 from .serializers import (
     HeroHomeSerializer, HomeAtuacaoSerializer, HomeEquipeSerializer,
     AtuacaoSerializer, MembroEquipeSerializer, BlogPostSerializer,
     PaginaQuemSomosSerializer, HomeBlogSerializer, HomeContatoSerializer,
-    HistoriaSerializer, DiferencialSerializer, QuemSomosSerializer
+    HistoriaSerializer, DiferencialSerializer, QuemSomosSerializer,
+    ContatoSerializer
 )
 
 # ==============================================================================
@@ -97,3 +100,24 @@ class PaginaQuemSomosViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PaginaQuemSomos.objects.all()
     serializer_class = PaginaQuemSomosSerializer
     permission_classes = [AllowAny]
+
+# ==============================================================================
+# 4. VIEW DE CONTATO
+# ==============================================================================
+
+class ContatoViewSet(viewsets.ModelViewSet):
+    queryset = Contato.objects.all()
+    serializer_class = ContatoSerializer
+    permission_classes = [AllowAny]
+    http_method_names = ['post']  # Apenas permite POST (criação)
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {"message": "Mensagem enviada com sucesso!"},
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
