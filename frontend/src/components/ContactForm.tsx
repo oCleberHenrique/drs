@@ -29,7 +29,7 @@ export default function ContactForm({ textoBotao }: ContactFormProps) {
     setMessage(null);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
       const res = await fetch(`${apiUrl}/api/contato/`, {
         method: "POST",
         headers: {

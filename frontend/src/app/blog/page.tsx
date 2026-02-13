@@ -1,11 +1,12 @@
 import { BlogPost } from "@/types";
 import { getImageUrl } from "@/utils/imageUrl";
+import { getApiUrl } from "@/utils/api";
 import Link from "next/link";
 import { Calendar, User } from "lucide-react";
 
 async function getPosts(): Promise<BlogPost[]> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/blog/`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();

@@ -1,5 +1,6 @@
 import { MembroEquipe } from "@/types";
 import { getImageUrl } from "@/utils/imageUrl";
+import { getApiUrl } from "@/utils/api";
 import Link from "next/link";
 import { Icon } from "./Icon"; 
 
@@ -16,9 +17,7 @@ interface HomeEquipeData {
 // Busca Textos da Seção
 async function getSectionData(): Promise<HomeEquipeData | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // CORREÇÃO: Usando apiUrl
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/home-equipe/`, { cache: "no-store" });
     
     if (!res.ok) return null;
@@ -31,9 +30,7 @@ async function getSectionData(): Promise<HomeEquipeData | null> {
 // Busca os 3 primeiros membros da equipe
 async function getTeamMembers(): Promise<MembroEquipe[]> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // CORREÇÃO: Usando apiUrl
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/equipe/`, { cache: "no-store" });
     
     if (!res.ok) return [];

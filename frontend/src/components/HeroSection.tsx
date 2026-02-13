@@ -1,10 +1,11 @@
 import { HeroData } from "@/types";
-import { getImageUrl } from '@/utils/imageUrl'; // <--- Importe
+import { getImageUrl } from '@/utils/imageUrl';
+import { getApiUrl } from "@/utils/api";
 import Link from "next/link";
 
 async function getHeroData(): Promise<HeroData | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/hero/`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();

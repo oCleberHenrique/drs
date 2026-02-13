@@ -1,6 +1,7 @@
 import { Atuacao } from "@/types";
 import { Icon } from "./Icon";
 import Link from "next/link";
+import { getApiUrl } from "@/utils/api";
 
 interface DjangoResponse {
   count: number;
@@ -11,9 +12,7 @@ interface DjangoResponse {
 
 async function getAtuacoes(): Promise<Atuacao[]> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // CORREÇÃO: Usando a variável apiUrl e template string
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/atuacoes/`, { 
       cache: "no-store",
     });

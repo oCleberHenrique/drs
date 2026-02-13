@@ -42,6 +42,10 @@ services:
     environment:
       - WATCHPACK_POLLING=true
       - NODE_ENV=development
+      # URL para o browser (client-side) - localhost:8080
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      # URL para o servidor Next.js (SSR) - usa hostname Docker interno
+      - API_URL_SERVER=http://backend:8000
     volumes:
       - ./frontend:/app
       - /app/node_modules

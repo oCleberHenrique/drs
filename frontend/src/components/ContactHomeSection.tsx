@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ContactForm from "./ContactForm";
+import { getApiUrl } from "@/utils/api";
 
 interface HomeContatoData {
   subtitulo: string;
@@ -12,7 +13,7 @@ interface HomeContatoData {
 
 async function getData(): Promise<HomeContatoData | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/home-contato/`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();

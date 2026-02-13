@@ -1,4 +1,5 @@
 import { getImageUrl } from "@/utils/imageUrl";
+import { getApiUrl } from "@/utils/api";
 import Link from "next/link";
 import { Icon } from "./Icon"; 
 
@@ -15,9 +16,7 @@ interface HistoryData {
 
 async function getHistory(): Promise<HistoryData | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // CORREÇÃO: Usando a variável apiUrl
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/historia/`, { cache: "no-store" });
     
     if (!res.ok) return null;

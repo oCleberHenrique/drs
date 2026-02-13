@@ -1,4 +1,5 @@
 import { getImageUrl } from "@/utils/imageUrl";
+import { getApiUrl } from "@/utils/api";
 import Link from "next/link";
 
 interface HomeBlogData {
@@ -13,10 +14,7 @@ interface HomeBlogData {
 
 async function getData(): Promise<HomeBlogData | null> {
   try {
-    // 1. Pega a URL certa
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // 2. CORREÇÃO: Usa a variável apiUrl no fetch
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/home-blog/`, { cache: "no-store" });
     
     if (!res.ok) return null;

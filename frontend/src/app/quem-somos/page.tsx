@@ -1,4 +1,5 @@
 import { getImageUrl } from "@/utils/imageUrl";
+import { getApiUrl } from "@/utils/api";
 import GallerySection from "@/components/GallerySection";
 import { Target, Eye, Diamond } from "lucide-react";
 
@@ -18,10 +19,7 @@ interface PaginaQuemSomosData {
 
 async function getData(): Promise<PaginaQuemSomosData | null> {
   try {
-    // CORREÇÃO: Usando a variável de ambiente correta
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // Agora busca na URL dinâmica
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/pagina-quem-somos/`, { cache: "no-store" });
     
     if (!res.ok) return null;

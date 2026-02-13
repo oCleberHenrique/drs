@@ -184,22 +184,138 @@ UNFOLD = {
     },
     "SIDEBAR": {
         "show_search": True,
-        "show_all_applications": False, # Vamos controlar manualmente para não bagunçar
+        "show_all_applications": False,
         "navigation": [
+            # -----------------------------------------------------------------
+            # HOME - Alterações das seções da página inicial
+            # -----------------------------------------------------------------
             {
-                "title": _("Conteúdo"),
+                "title": _("Home"),
                 "separator": True,
+                "collapsible": True,
                 "items": [
-                    # Vamos adicionar as models aqui conforme criarmos (Blog, Atuações, etc)
+                    {
+                        "title": _("Banner Principal"),
+                        "icon": "image",
+                        "link": reverse_lazy("admin:website_herohome_changelist"),
+                    },
+                    {
+                        "title": _("Seção Quem Somos"),
+                        "icon": "groups",
+                        "link": reverse_lazy("admin:website_quemsomos_changelist"),
+                    },
+                    {
+                        "title": _("Diferenciais"),
+                        "icon": "star",
+                        "link": reverse_lazy("admin:website_diferencial_changelist"),
+                    },
+                    {
+                        "title": _("Seção Atuação"),
+                        "icon": "gavel",
+                        "link": reverse_lazy("admin:website_homeatuacao_changelist"),
+                    },
+                    {
+                        "title": _("Seção História"),
+                        "icon": "history",
+                        "link": reverse_lazy("admin:website_historia_changelist"),
+                    },
+                    {
+                        "title": _("Seção Equipe"),
+                        "icon": "people",
+                        "link": reverse_lazy("admin:website_homeequipe_changelist"),
+                    },
+                    {
+                        "title": _("Seção Blog"),
+                        "icon": "article",
+                        "link": reverse_lazy("admin:website_homeblog_changelist"),
+                    },
+                    {
+                        "title": _("Seção Contato"),
+                        "icon": "contact_mail",
+                        "link": reverse_lazy("admin:website_homecontato_changelist"),
+                    },
+                ],
+            },
+            # -----------------------------------------------------------------
+            # PÁGINAS INTERNAS - Atuações, Equipe e Blog
+            # -----------------------------------------------------------------
+            {
+                "title": _("Atuações"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Áreas de Atuação"),
+                        "icon": "folder",
+                        "link": reverse_lazy("admin:website_atuacao_changelist"),
+                    },
                 ],
             },
             {
+                "title": _("Equipe"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Membros da Equipe"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:website_membroequipe_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Blog"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Artigos"),
+                        "icon": "description",
+                        "link": reverse_lazy("admin:website_blogpost_changelist"),
+                    },
+                ],
+            },
+            # -----------------------------------------------------------------
+            # PÁGINAS ÚNICAS - Quem Somos interna, etc.
+            # -----------------------------------------------------------------
+            {
+                "title": _("Páginas Únicas"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Quem Somos (Interna)"),
+                        "icon": "info",
+                        "link": reverse_lazy("admin:website_paginaquemsomos_changelist"),
+                    },
+                ],
+            },
+            # -----------------------------------------------------------------
+            # CONTATO - Mensagens recebidas
+            # -----------------------------------------------------------------
+            {
+                "title": _("Contato"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Mensagens Recebidas"),
+                        "icon": "inbox",
+                        "link": reverse_lazy("admin:website_contato_changelist"),
+                    },
+                ],
+            },
+            # -----------------------------------------------------------------
+            # SISTEMA - Usuários e grupos
+            # -----------------------------------------------------------------
+            {
                 "title": _("Sistema"),
                 "separator": True,
+                "collapsible": True,
                 "items": [
                     {
                         "title": _("Usuários"),
-                        "icon": "people",
+                        "icon": "person",
                         "link": reverse_lazy("admin:auth_user_changelist"),
                     },
                     {

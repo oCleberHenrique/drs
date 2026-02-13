@@ -1,9 +1,10 @@
 import { MembroEquipe } from "@/types";
 import TeamGalleryClient from "@/components/TeamGalleryClient";
+import { getApiUrl } from "@/utils/api";
 
 async function getEquipe(): Promise<MembroEquipe[]> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/equipe/`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();

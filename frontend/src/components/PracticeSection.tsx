@@ -1,6 +1,7 @@
 import { Atuacao } from "@/types";
 import { Icon } from "./Icon";
 import Link from "next/link";
+import { getApiUrl } from "@/utils/api";
 
 // Interface para o texto da esquerda
 interface SectionData {
@@ -14,8 +15,7 @@ interface SectionData {
 // Busca Texto da Esquerda
 async function getSectionData(): Promise<SectionData | null> {
   try {
-    // CORREÇÃO 1: Definindo e usando a variável de ambiente
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/home-atuacao/`, { cache: "no-store" });
     
     if (!res.ok) return null;
@@ -28,9 +28,7 @@ async function getSectionData(): Promise<SectionData | null> {
 // Busca Cards da Direita (Atuações)
 async function getAtuacoes(): Promise<Atuacao[]> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // CORREÇÃO 2: Usando a variável apiUrl que você criou (estava fixo backend:8000 antes)
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/atuacoes/`, { cache: "no-store" });
     
     if (!res.ok) return [];

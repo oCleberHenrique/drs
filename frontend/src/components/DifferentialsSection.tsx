@@ -1,10 +1,9 @@
 import { Diferencial } from "@/types";
+import { getApiUrl } from "@/utils/api";
 
 async function getDiferenciais(): Promise<Diferencial[]> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // CORREÇÃO: Usando a template string com a variável apiUrl
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/diferenciais/`, { cache: "no-store" });
     
     if (!res.ok) return [];

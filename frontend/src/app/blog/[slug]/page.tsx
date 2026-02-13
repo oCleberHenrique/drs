@@ -1,10 +1,11 @@
 import { getImageUrl } from "@/utils/imageUrl";
+import { getApiUrl } from "@/utils/api";
 import { notFound } from "next/navigation";
 import { Calendar, User } from "lucide-react";
 
 async function getPostDetalhe(slug: string) {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = getApiUrl();
     // Usa o lookup_field 'slug' diretamente na URL
     const res = await fetch(`${apiUrl}/api/blog/${slug}/`, { cache: "no-store" });
     if (!res.ok) return null;

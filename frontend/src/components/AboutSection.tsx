@@ -1,12 +1,10 @@
-import { QuemSomosHomeData } from "@/types"; // <--- Mudamos o nome aqui
+import { QuemSomosHomeData } from "@/types";
 import { getImageUrl } from "@/utils/imageUrl";
+import { getApiUrl } from "@/utils/api";
 
 async function getAboutData(): Promise<QuemSomosHomeData | null> {
   try {
-    // Pega a URL correta (Vercel ou Local)
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    
-    // CORREÇÃO CRÍTICA AQUI: Usamos a variável apiUrl, não o endereço fixo backend:8000
+    const apiUrl = getApiUrl();
     const res = await fetch(`${apiUrl}/api/quem-somos-home/`, { cache: "no-store" });
     
     if (!res.ok) return null;
