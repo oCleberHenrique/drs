@@ -18,6 +18,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Uploads (VPS usa ./data/media)
+data/media/
+backend/media/
+
 # IDEs
 .vscode/
 .idea/

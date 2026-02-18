@@ -1,0 +1,57 @@
+# Docker Compose para VPS (Hostinger) - apenas backend + PostgreSQL
+# Porta 9000 no host para não conflitar com outro projeto na 8000
+# Frontend vai na Vercel; este subdomínio (dsr.v4jasson.com.br) aponta para a API + Admin
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: dsr_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dsr_db
+      POSTGRES_USER: dsr_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dsr_password_alterar_em_producao}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dsr_network
+    # Não expõe 5432 no host para não conflitar com outro PostgreSQL
+    # Apenas o backend acessa via rede interna
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dsr_backend
+    restart: unless-stopped
+    command: >
+      sh -c "uv run python manage.py migrate --noinput
+      && uv run python manage.py collectstatic --noinput
+      && uv run gunicorn core.wsgi:application
+      --bind 0.0.0.0:8000
+      --workers 2
+      --threads 2
+      --access-logfile -
+      --error-logfile -"
+    volumes:
+      - ./data/media:/app/media
+    ports:
+      - "9000:8000"
+    environment:
+      - DEBUG=0
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=dsr.v4jasson.com.br,31.97.242.139,localhost,127.0.0.1
+      - DATABASE_URL=postgres://dsr_user:${POSTGRES_PASSWORD:-dsr_password_alterar_em_producao}@db:5432/dsr_db
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://dsr.v4jasson.com.br}
+      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS:-https://dsr.v4jasson.com.br}
+    depends_on:
+      - db
+    networks:
+      - dsr_network
+
+volumes:
+  postgres_data:
+
+networks:
+  dsr_network:
+    driver: bridge
