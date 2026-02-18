@@ -1,6 +1,6 @@
 # Docker Compose para VPS (Hostinger) - apenas backend + PostgreSQL
 # Porta 9000 no host para não conflitar com outro projeto na 8000
-# Frontend vai na Vercel; este subdomínio (dsr.v4jasson.com.br) aponta para a API + Admin
+# Frontend na Vercel; API + Admin em dsrpainel.v4jasson.com.br (porta 9000)
 
 services:
   db:
@@ -40,10 +40,10 @@ services:
     environment:
       - DEBUG=0
       - SECRET_KEY=${SECRET_KEY}
-      - ALLOWED_HOSTS=dsr.v4jasson.com.br,31.97.242.139,localhost,127.0.0.1
+      - ALLOWED_HOSTS=dsrpainel.v4jasson.com.br,31.97.242.139,localhost,127.0.0.1
       - DATABASE_URL=postgres://dsr_user:${POSTGRES_PASSWORD:-dsr_password_alterar_em_producao}@db:5432/dsr_db
-      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://dsr.v4jasson.com.br}
-      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS:-https://dsr.v4jasson.com.br}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://dsrpainel.v4jasson.com.br}
+      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS:-https://dsrpainel.v4jasson.com.br}
     depends_on:
       - db
     networks:
