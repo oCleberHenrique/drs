@@ -12,6 +12,8 @@ async function getEquipe(): Promise<MembroEquipe[]> {
   } catch (error) { return []; }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function EquipePage() {
   const members = await getEquipe();
 

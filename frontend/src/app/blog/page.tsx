@@ -14,6 +14,8 @@ async function getPosts(): Promise<BlogPost[]> {
   } catch (error) { return []; }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogPage() {
   const posts = await getPosts();
 

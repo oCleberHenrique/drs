@@ -14,6 +14,8 @@ async function getPostDetalhe(slug: string) {
   } catch (error) { return null; }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogPostInterna({ params }: { params: { slug: string } }) {
   const post = await getPostDetalhe(params.slug);
   if (!post) return notFound();

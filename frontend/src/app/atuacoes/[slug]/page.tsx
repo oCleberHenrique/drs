@@ -15,6 +15,8 @@ async function getAtuacaoDetalhe(slug: string) {
   } catch (error) { return null; }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function AtuacaoInterna({ params }: { params: { slug: string } }) {
   const atuacao = await getAtuacaoDetalhe(params.slug);
 

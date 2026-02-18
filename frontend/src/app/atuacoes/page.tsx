@@ -14,6 +14,8 @@ async function getAtuacoes(): Promise<Atuacao[]> {
   } catch (error) { return []; }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function AtuacoesPage() {
   const atuacoes = await getAtuacoes();
 
